@@ -1,0 +1,40 @@
+import pandas as pd
+uploaded = files.upload()
+!pip install Basemap
+
+
+from mpl_toolkits.basemap import Basemap
+import matplotlib.pyplot as plt
+
+
+data = pd.read_csv('Social Mobility in FSM.csv')
+data['Longitude'] = data['Longitude'].astype(str).str.replace(r'[^\d.-]', '', regex=True)
+data['Latitude'] = data['Latitude'].astype(str).str.replace(r'[^\d.-]', '', regex=True)
+data['Longitude'] = pd.to_numeric(data['Longitude'], errors='coerce')
+data['Latitude'] = pd.to_numeric(data['Latitude'], errors='coerce')
+
+
+map = Basemap(projection='lcc', resolution='l',
+           lat_0=53, lon_0=-2,
+           width=6E5, height=7E5)
+
+
+map.drawcoastlines(color='black')
+map.drawcountries(color='black')
+map.drawstates(color='gray')
+
+
+map.scatter(
+     data['Longitude'],
+     data['Latitude'],
+     latlon=True,
+     c=data['average of 2015 & 2016'],
+     vmin=0,
+     vmax=0.6,
+     s=15
+)
+
+
+plt.title('FSM')
+plt.colorbar(label='% of 19 year olds qualified to level 3 at academic age 15');
+plt.show()
